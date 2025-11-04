@@ -21,14 +21,18 @@ class MenuAdapter(private val menuList: List<MenuItem>) :
 
     override fun onBindViewHolder(holder: MenuViewHolder, position: Int) {
         val item = menuList[position]
+
         holder.binding.tvFoodName.text = item.name
         holder.binding.tvFoodPrice.text = item.price
+        holder.binding.imgFood.setImageResource(item.imageRes)  // <─ Tambahan
+
         holder.binding.cbSelect.isChecked = item.isSelected
 
         holder.binding.cbSelect.setOnCheckedChangeListener { _, checked ->
             item.isSelected = checked
         }
     }
+
 
     override fun getItemCount() = menuList.size
 
