@@ -46,14 +46,14 @@ Aplikasi ini dibuat sebagai tugas **UTS** pada mata kuliah **Pengembangan Aplika
 Halaman pembuka aplikasi dengan animasi / logo sebelum masuk ke halaman berikutnya.
 
 📸 *Screenshot:*  
-![alt text](src/ss-dokumentasi/SplashActivity.jpeg)
+![alt text](app/src/ss-dokumentasi/SplashActivity.jpeg)
 ---
 
 ### ✅ 2. **AuthChoiceActivity**
 Halaman untuk memilih tindakan: Login atau Register.
 
 📸 *Screenshot:*  
-![alt text](src/ss-dokumentasi/AuthChoiceActivity.jpeg)
+![alt text](app/src/ss-dokumentasi/AuthChoiceActivity.jpeg)
 
 ---
 
@@ -61,7 +61,7 @@ Halaman untuk memilih tindakan: Login atau Register.
 Halaman untuk login menggunakan email & password.
 
 📸 *Screenshot:*  
-![alt text](src/ss-dokumentasi/LoginActivity.jpeg)
+![alt text](app/src/ss-dokumentasi/LoginActivity.jpeg)
 
 ---
 
@@ -69,7 +69,7 @@ Halaman untuk login menggunakan email & password.
 Halaman pendaftaran akun untuk pengguna baru.
 
 📸 *Screenshot:*  
-![alt text](src/ss-dokumentasi/RegisterActivity.jpeg)
+![alt text](app/src/ss-dokumentasi/RegisterActivity.jpeg)
 ---
 
 ### ✅ 5. **HomeActivity**
@@ -77,7 +77,7 @@ Menampilkan daftar menu makanan lengkap beserta gambar dan harga.
 Pengguna dapat memilih menu untuk masuk ke pesanan.
 
 📸 *Screenshot:*  
-![alt text](src/ss-dokumentasi/HomeActivity.jpeg)
+![alt text](app/src/ss-dokumentasi/HomeActivity.jpeg)
 
 ---
 
@@ -88,7 +88,7 @@ Menampilkan ringkasan pesanan:
 ✔ Total harga otomatis
 
 📸 *Screenshot:*  
-![alt text](src/ss-dokumentasi/OrderActivity.jpeg)
+![alt text](app/src/ss-dokumentasi/OrderActivity.jpeg)
 
 ---
 
@@ -99,7 +99,7 @@ Form pengisian data:
 - Catatan tambahan
 
 📸 *Screenshot:*  
-![alt text](src/ss-dokumentasi/AddressActivity.jpeg)
+![alt text](app/src/ss-dokumentasi/AddressActivity.jpeg)
 
 ---
 
@@ -107,6 +107,6 @@ Form pengisian data:
 Menampilkan informasi akhir pesanan sebelum kembali ke Home.
 
 📸 *Screenshot:*  
-![alt text](src/ss-dokumentasi/ConfirmationActivity.jpeg)
+![alt text](app/src/ss-dokumentasi/ConfirmationActivity.jpeg)
 
 ---
