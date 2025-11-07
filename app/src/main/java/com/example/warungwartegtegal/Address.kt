@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
 import com.example.warungwartegtegal.databinding.ActivityAddressBinding
+import com.example.warungwartegtegal.data.OrderModel
 
 class AddressActivity : AppCompatActivity() {
     private lateinit var binding: ActivityAddressBinding
@@ -29,11 +30,20 @@ class AddressActivity : AppCompatActivity() {
             return
         }
 
+        // ✅ Ambil data dari OrderActivity
+        val orders = intent.getParcelableArrayListExtra<OrderModel>("order_list") ?: arrayListOf()
+        val totalPrice = intent.getIntExtra("total_price", 0)
+
+        // ✅ Kirim lagi ke ConfirmationActivity
         val intent = Intent(this, ConfirmationActivity::class.java).apply {
             putExtra("CUSTOMER_NAME", customerName)
             putExtra("DELIVERY_ADDRESS", deliveryAddress)
             putExtra("NOTES", notes)
+
+            putParcelableArrayListExtra("order_list", orders)
+            putExtra("total_price", totalPrice)
         }
+
         startActivity(intent)
     }
 }

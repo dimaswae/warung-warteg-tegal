@@ -5,7 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.warungwartegtegal.databinding.ActivityOrderBinding
-import com.example.warungwartegtegal.model.OrderModel
+import com.example.warungwartegtegal.data.OrderModel
 
 class OrderActivity : AppCompatActivity() {
     private lateinit var binding: ActivityOrderBinding
@@ -16,7 +16,7 @@ class OrderActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         // terima data dari Home
-        val orders = intent.getSerializableExtra("order_list") as ArrayList<OrderModel>
+        val orders = intent.getSerializableExtra("order_list") as? ArrayList<OrderModel> ?: arrayListOf()
 
         // tampilkan ke RecyclerView
         binding.rvOrders.layoutManager = LinearLayoutManager(this)
@@ -28,6 +28,11 @@ class OrderActivity : AppCompatActivity() {
 
         binding.btnKirim.setOnClickListener {
             val intent = Intent(this, AddressActivity::class.java)
+            intent.putParcelableArrayListExtra("order_list", orders)
+
+            val total = orders.sumOf { it.price * it.quantity }
+            intent.putExtra("total_price", total)
+
             startActivity(intent)
         }
     }

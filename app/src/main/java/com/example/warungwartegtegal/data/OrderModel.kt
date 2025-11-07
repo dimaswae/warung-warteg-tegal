@@ -1,9 +1,11 @@
-package com.example.warungwartegtegal.model
+package com.example.warungwartegtegal.data
 
-import java.io.Serializable
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
 
+@Parcelize
 data class OrderModel(
     val name: String,
     val price: Int,
-    var quantity: Int
-) : Serializable
+    val quantity: Int
+) : Parcelable

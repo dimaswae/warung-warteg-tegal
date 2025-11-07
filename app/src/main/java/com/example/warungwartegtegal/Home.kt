@@ -8,13 +8,22 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.warungwartegtegal.databinding.ActivityHomeBinding
 import com.example.warungwartegtegal.data.MenuItem
 import com.example.warungwartegtegal.MenuAdapter
-//import com.example.warungwartegtegal.OrderActivity
-
+import com.example.warungwartegtegal.OrderActivity
+import com.example.warungwartegtegal.R
+import com.example.warungwartegtegal.data.OrderModel
 
 class HomeActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityHomeBinding
     private lateinit var adapter: MenuAdapter
+
+    // Function to convert price string to integer
+    private fun hargaToInt(harga: String): Int {
+        return harga.replace("Rp", "")
+            .replace(".", "")
+            .trim()
+            .toInt()
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,7 +51,6 @@ class HomeActivity : AppCompatActivity() {
             MenuItem("Es Campur", "Rp 5.000", R.drawable.es_campur),
         )
 
-
         // Setup RecyclerView
         adapter = MenuAdapter(menuItems)
         binding.rvMenu.layoutManager = LinearLayoutManager(this)
@@ -50,15 +58,27 @@ class HomeActivity : AppCompatActivity() {
 
         // Order button click
         binding.btnOrder.setOnClickListener {
+            // Get the list of selected items from the adapter
             val selectedItems = adapter.getSelectedItems()
 
             if (selectedItems.isEmpty()) {
-                Toast.makeText(this, "Pilih menu dulu!", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Please select at least one item", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
 
+            val orderList = ArrayList<OrderModel>()
+            selectedItems.forEach { menuItem ->
+                orderList.add(
+                    OrderModel(
+                        name = menuItem.name,
+                        price = hargaToInt(menuItem.price), // Now correctly accesses menuItem.price
+                        quantity = 1
+                    )
+                )
+            }
+
             val intent = Intent(this, OrderActivity::class.java)
-            intent.putParcelableArrayListExtra("cart", ArrayList(selectedItems))
+            intent.putParcelableArrayListExtra("order_list", orderList)
             startActivity(intent)
         }
     }
