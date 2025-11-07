@@ -1,0 +1,112 @@
+Index: app/src/main/java/com/example/warungwartegtegal/Home.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.example.warungwartegtegal\r\n\r\nimport android.content.Intent\r\nimport androidx.appcompat.app.AppCompatActivity\r\nimport android.os.Bundle\r\nimport android.widget.Toast\r\nimport androidx.recyclerview.widget.LinearLayoutManager\r\nimport com.example.warungwartegtegal.databinding.ActivityHomeBinding\r\nimport com.example.warungwartegtegal.data.MenuItem\r\nimport com.example.warungwartegtegal.MenuAdapter\r\n//import com.example.warungwartegtegal.OrderActivity\r\n\r\n\r\nclass HomeActivity : AppCompatActivity() {\r\n\r\n    private lateinit var binding: ActivityHomeBinding\r\n    private lateinit var adapter: MenuAdapter\r\n\r\n    override fun onCreate(savedInstanceState: Bundle?) {\r\n        super.onCreate(savedInstanceState)\r\n        binding = ActivityHomeBinding.inflate(layoutInflater)\r\n        setContentView(binding.root)\r\n\r\n        // Set toolbar\r\n        setSupportActionBar(binding.toolbar)\r\n        supportActionBar?.title = \"Warung Warteg Tegal\"\r\n\r\n        // Dummy menu data\r\n        val menuItems = listOf(\r\n            MenuItem(\"Nasi Rames\", \"Rp 15.000\", R.drawable.nasi_rames),\r\n            MenuItem(\"Ayam Goreng\", \"Rp 13.000\", R.drawable.ayam_goreng),\r\n            MenuItem(\"Sayur Asem\", \"Rp 6.000\", R.drawable.sayur_asem),\r\n            MenuItem(\"Tahu Tempe Goreng\", \"Rp 5.000\", R.drawable.tahu_tempe),\r\n            MenuItem(\"Ikan Lele Goreng\", \"Rp 12.000\", R.drawable.lele_goreng),\r\n            MenuItem(\"Ayam Bakar\", \"Rp 10.000\", R.drawable.ayam_bakar),\r\n            MenuItem(\"Paket 10rb\", \"Rp 10.000\", R.drawable.paket_10rb),\r\n            MenuItem(\"Tongkol Balado\", \"Rp 5.000\", R.drawable.tongkol_balado),\r\n            MenuItem(\"Nasi\", \"Rp 5.000\", R.drawable.nasi),\r\n            MenuItem(\"Oreg Tempe\", \"Rp 4.000\", R.drawable.oreg_tempe),\r\n            MenuItem(\"Es Teh\", \"Rp 3.000\", R.drawable.es_teh),\r\n            MenuItem(\"Es Jeruk\", \"Rp 3.000\", R.drawable.es_jeruk),\r\n            MenuItem(\"Es Campur\", \"Rp 5.000\", R.drawable.es_campur),\r\n        )\r\n\r\n\r\n        // Setup RecyclerView\r\n        adapter = MenuAdapter(menuItems)\r\n        binding.rvMenu.layoutManager = LinearLayoutManager(this)\r\n        binding.rvMenu.adapter = adapter\r\n\r\n        // Order button click\r\n        binding.btnOrder.setOnClickListener {\r\n            val selectedItems = adapter.getSelectedItems()\r\n\r\n            if (selectedItems.isEmpty()) {\r\n                Toast.makeText(this, \"Pilih menu dulu!\", Toast.LENGTH_SHORT).show()\r\n                return@setOnClickListener\r\n            }\r\n\r\n            val intent = Intent(this, OrderActivity::class.java)\r\n            intent.putParcelableArrayListExtra(\"cart\", ArrayList(selectedItems))\r\n            startActivity(intent)\r\n        }\r\n    }\r\n}\r\n
+===================================================================
+diff --git a/app/src/main/java/com/example/warungwartegtegal/Home.kt b/app/src/main/java/com/example/warungwartegtegal/Home.kt
+--- a/app/src/main/java/com/example/warungwartegtegal/Home.kt	(revision 60ca62c31ae6e7007522d393dc773c48349645ea)
++++ b/app/src/main/java/com/example/warungwartegtegal/Home.kt	(date 1762473988140)
+@@ -8,7 +8,8 @@
+ import com.example.warungwartegtegal.databinding.ActivityHomeBinding
+ import com.example.warungwartegtegal.data.MenuItem
+ import com.example.warungwartegtegal.MenuAdapter
+-//import com.example.warungwartegtegal.OrderActivity
++import com.example.warungwartegtegal.data.OrderModel
++import com.example.warungwartegtegal.OrderActivity
+ 
+ 
+ class HomeActivity : AppCompatActivity() {
+@@ -16,6 +17,13 @@
+     private lateinit var binding: ActivityHomeBinding
+     private lateinit var adapter: MenuAdapter
+ 
++    private fun hargaToInt(harga: String): Int {
++        return harga.replace("Rp", "")
++            .replace(".", "")
++            .trim()
++            .toInt()
++    }
++
+     override fun onCreate(savedInstanceState: Bundle?) {
+         super.onCreate(savedInstanceState)
+         binding = ActivityHomeBinding.inflate(layoutInflater)
+@@ -57,9 +65,22 @@
+                 return@setOnClickListener
+             }
+ 
++            val orderList = ArrayList<OrderModel>()
++
++            selectedItems.forEach { menu ->
++                orderList.add(
++                    OrderModel(
++                        menu.name,
++                        hargaToInt(menu.price),
++                        1
++                    )
++                )
++            }
++
+             val intent = Intent(this, OrderActivity::class.java)
+-            intent.putParcelableArrayListExtra("cart", ArrayList(selectedItems))
++            intent.putExtra("order_list", orderList)
+             startActivity(intent)
+         }
++
+     }
+ }
+Index: app/src/main/java/com/example/warungwartegtegal/data/OrderModel.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.example.warungwartegtegal.model\r\n\r\nimport java.io.Serializable\r\n\r\ndata class OrderModel(\r\n    val name: String,\r\n    val price: Int,\r\n    var quantity: Int\r\n) : Serializable\r\n
+===================================================================
+diff --git a/app/src/main/java/com/example/warungwartegtegal/data/OrderModel.kt b/app/src/main/java/com/example/warungwartegtegal/data/OrderModel.kt
+--- a/app/src/main/java/com/example/warungwartegtegal/data/OrderModel.kt	(revision 60ca62c31ae6e7007522d393dc773c48349645ea)
++++ b/app/src/main/java/com/example/warungwartegtegal/data/OrderModel.kt	(date 1762473969630)
+@@ -1,9 +1,10 @@
+-package com.example.warungwartegtegal.model
++package com.example.warungwartegtegal.data
++import android.os.Parcelable
++import kotlinx.parcelize.Parcelize
+ 
+-import java.io.Serializable
+-
++@Parcelize
+ data class OrderModel(
+     val name: String,
+     val price: Int,
+     var quantity: Int
+-) : Serializable
++) : Parcelable
+Index: app/src/main/java/com/example/warungwartegtegal/MenuAdapter.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.example.warungwartegtegal\r\n\r\nimport android.view.LayoutInflater\r\nimport android.view.ViewGroup\r\nimport androidx.recyclerview.widget.RecyclerView\r\nimport com.example.warungwartegtegal.databinding.ItemMenuBinding\r\nimport com.example.warungwartegtegal.data.MenuItem\r\n\r\nclass MenuAdapter(private val menuList: List<MenuItem>) :\r\n    RecyclerView.Adapter<MenuAdapter.MenuViewHolder>() {\r\n\r\n    inner class MenuViewHolder(val binding: ItemMenuBinding) :\r\n        RecyclerView.ViewHolder(binding.root)\r\n\r\n    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MenuViewHolder {\r\n        val binding = ItemMenuBinding.inflate(\r\n            LayoutInflater.from(parent.context), parent, false\r\n        )\r\n        return MenuViewHolder(binding)\r\n    }\r\n\r\n    override fun onBindViewHolder(holder: MenuViewHolder, position: Int) {\r\n        val item = menuList[position]\r\n\r\n        holder.binding.tvFoodName.text = item.name\r\n        holder.binding.tvFoodPrice.text = item.price\r\n        holder.binding.imgFood.setImageResource(item.imageRes)  // <─ Tambahan\r\n\r\n        holder.binding.cbSelect.isChecked = item.isSelected\r\n\r\n        holder.binding.cbSelect.setOnCheckedChangeListener { _, checked ->\r\n            item.isSelected = checked\r\n        }\r\n    }\r\n\r\n\r\n    override fun getItemCount() = menuList.size\r\n\r\n    fun getSelectedItems(): List<MenuItem> {\r\n        return menuList.filter { it.isSelected }\r\n    }\r\n}\r\n\r\n
+===================================================================
+diff --git a/app/src/main/java/com/example/warungwartegtegal/MenuAdapter.kt b/app/src/main/java/com/example/warungwartegtegal/MenuAdapter.kt
+--- a/app/src/main/java/com/example/warungwartegtegal/MenuAdapter.kt	(revision 60ca62c31ae6e7007522d393dc773c48349645ea)
++++ b/app/src/main/java/com/example/warungwartegtegal/MenuAdapter.kt	(date 1762473988152)
+@@ -33,7 +33,6 @@
+         }
+     }
+ 
+-
+     override fun getItemCount() = menuList.size
+ 
+     fun getSelectedItems(): List<MenuItem> {
+Index: app/src/main/java/com/example/warungwartegtegal/Order.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.example.warungwartegtegal\r\n\r\nimport android.content.Intent\r\nimport androidx.appcompat.app.AppCompatActivity\r\nimport android.os.Bundle\r\nimport androidx.recyclerview.widget.LinearLayoutManager\r\nimport com.example.warungwartegtegal.databinding.ActivityOrderBinding\r\nimport com.example.warungwartegtegal.model.OrderModel\r\n\r\nclass OrderActivity : AppCompatActivity() {\r\n    private lateinit var binding: ActivityOrderBinding\r\n\r\n    override fun onCreate(savedInstanceState: Bundle?) {\r\n        super.onCreate(savedInstanceState)\r\n        binding = ActivityOrderBinding.inflate(layoutInflater)\r\n        setContentView(binding.root)\r\n\r\n        // terima data dari Home\r\n        val orders = intent.getSerializableExtra(\"order_list\") as ArrayList<OrderModel>\r\n\r\n        // tampilkan ke RecyclerView\r\n        binding.rvOrders.layoutManager = LinearLayoutManager(this)\r\n        binding.rvOrders.adapter = OrderAdapter(orders)\r\n\r\n        // hitung total harga\r\n        val total = orders.sumOf { it.price * it.quantity }\r\n        binding.tvTotalPrice.text = \"Rp $total\"\r\n\r\n        binding.btnKirim.setOnClickListener {\r\n            val intent = Intent(this, AddressActivity::class.java)\r\n            startActivity(intent)\r\n        }\r\n    }\r\n}\r\n
+===================================================================
+diff --git a/app/src/main/java/com/example/warungwartegtegal/Order.kt b/app/src/main/java/com/example/warungwartegtegal/Order.kt
+--- a/app/src/main/java/com/example/warungwartegtegal/Order.kt	(revision 60ca62c31ae6e7007522d393dc773c48349645ea)
++++ b/app/src/main/java/com/example/warungwartegtegal/Order.kt	(date 1762473572628)
+@@ -16,7 +16,7 @@
+         setContentView(binding.root)
+ 
+         // terima data dari Home
+-        val orders = intent.getSerializableExtra("order_list") as ArrayList<OrderModel>
++        val orders = intent.getParcelableArrayListExtra<OrderModel>("cart") ?: arrayListOf()
+ 
+         // tampilkan ke RecyclerView
+         binding.rvOrders.layoutManager = LinearLayoutManager(this)
